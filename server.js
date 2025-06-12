@@ -4,6 +4,7 @@ const cors = require("cors");
 const connectDB = require("./config/db");
 const taskRoutes = require("./routes/taskRoutes");
 const authRoutes = require("./routes/authRoutes");
+const notificationRoutes = require("./routes/notificationRoutes");
 const protect = require("./middleware/auth");
 
 const app = express();
@@ -17,6 +18,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/tasks", protect, taskRoutes);
+
+app.use("/notifications", protect, notificationRoutes);
 
 app.use("/auth", authRoutes);
 
