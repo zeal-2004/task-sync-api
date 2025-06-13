@@ -14,7 +14,7 @@ app.use(express.json());
 connectDB();
 
 app.get("/", (req, res) => {
-  res.send("Task Manager API");
+  res.send("Task Sync API");
 });
 
 app.use("/tasks", protect, taskRoutes);
