@@ -1,4 +1,4 @@
-# TaskSync - Task Management API
+# TaskSync API
 
 TaskSync is a RESTful backend API designed to manage personal and group tasks, along with real-time notifications. Built with **Node.js**, **Express**, and **MongoDB**, it offers robust features such as group task sharing, individual task management, and notification tracking — all packaged in a clean API interface.
 
@@ -11,7 +11,7 @@ TaskSync is a RESTful backend API designed to manage personal and group tasks, a
 [https://task-sync-3tkr.onrender.com](https://task-sync-3tkr.onrender.com)
 
 > Use
-[Postman](https://www.postman.com/) or a similar tool to test and explore the API.
+> [Postman](https://www.postman.com/) or a similar tool to test and explore the API.
 
 ---
 
