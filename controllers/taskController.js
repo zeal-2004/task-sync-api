@@ -1,18 +1,27 @@
 const Task = require("../models/Task");
+const User = require("../models/User");
 const Notification = require("../models/Notification");
 
 const createTask = async (req, res) => {
   try {
-    const { users = [], ...rest } = req.body;
+    let { users = [], ...rest } = req.body;
 
-    if (!users.includes(req.user.id)) users.push(req.user.id);
+    const userSet = new Set(users);
+    userSet.add(req.user.email);
+    users = [...userSet];
+
+    const userDocs = await User.find({ email: { $in: users } });
+    const userIds = userDocs.map((u) => u._id);
+    const foundEmails = userDocs.map((u) => u.email);
+    const missingEmails = users.filter((email) => !foundEmails.includes(email));
 
     const task = await Task.create({
       ...rest,
-      users,
+      users: userIds,
     });
 
-    const otherUsers = users.filter((id) => id != req.user.id);
+    const currentUserId = req.user.id.toString();
+    const otherUsers = userIds.filter((id) => id.toString() !== currentUserId);
     await Notification.insertMany(
       otherUsers.map((userId) => ({
         recipient: userId,
@@ -20,7 +29,14 @@ const createTask = async (req, res) => {
       }))
     );
 
-    res.status(201).json(task);
+    const responsePayload = { task };
+    if (missingEmails.length > 0) {
+      responsePayload.warning = `Some emails were not found: ${missingEmails.join(
+        ", "
+      )}`;
+    }
+
+    res.status(201).json(responsePayload);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
